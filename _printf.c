@@ -1,56 +1,52 @@
-#include "custom_printer.h"
+#include "main.h"
 #include <limits.h>
 #include <stdio.h>
 
 /**
- * unique_printf - Generates formatted output based on a format string.
- * @format: The format string containing characters and conversion specifiers.
- *
- * Description: This function utilizes the resolve_printer() function to identify
- * the appropriate printing function to apply, taking into account conversion
- * specifiers within the format string.
- *
- * Returns: The length of the formatted output string.
+ * _printf - produces output according to a format
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
+ * Return: length of the formatted output string
  */
-int unique_printf(const char *format, ...)
+int _printf(const char *format, ...)
 {
-    int (*printer)(va_list, flags_t *);
-    const char *iterator;
-    va_list arguments;
-    flags_t flags = {0, 0, 0};
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
 
-    int output_length = 0;
+	register int count = 0;
 
-    va_start(arguments, format);
+	va_start(arguments, format);
+	if(format!=NULL)
+	if (format[0] == '%' && !format[1])
+		return (-1);
+	if(format[2]!=NULL)
+	if (format[0] == '%' && format[1] == ' ')
+		return (-1);
+	for (p = format; *p; p++)
+	{
+		if (*p == '%')
+		{
+			p++;
+			if (*p == '%')
+			{
+				count += _putchar('%');
+				continue;
+			}
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
+	}
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
 
-    if (!format || (format[0] == '%' && !format[1]))
-        return (-1);
-
-    if (format[0] == '%' && format[1] == ' ' && !format[2])
-        return (-1);
-
-    for (iterator = format; *iterator; iterator++)
-    {
-        if (*iterator == '%')
-        {
-            iterator++;
-            if (*iterator == '%')
-            {
-                output_length += unique_putchar('%');
-                continue;
-            }
-            while (inspect_flags(*iterator, &flags))
-                iterator++;
-            printer = resolve_printer(*iterator);
-            output_length += (printer)
-                ? printer(arguments, &flags)
-                : unique_printf("%%%c", *iterator);
-        }
-        else
-            output_length += unique_putchar(*iterator);
-    }
-
-    unique_putchar(-1);
-    va_end(arguments);
-    return output_length;
 }
