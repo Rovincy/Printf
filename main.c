@@ -1,4 +1,9 @@
 #include "main.h"
+<<<<<<< HEAD
+=======
+#include <limits.h>
+#include <stdio.h>
+>>>>>>> c6659f25bbeab20a623a9d4c2a4ac4e0e1be91a4
 
 /**
  * main - Entry point
@@ -7,10 +12,17 @@
  */
 int main(void)
 {
+<<<<<<< HEAD
 	int len;
 	int len2;
 	unsigned int ui;
 	void *addr;
+=======
+    int len;
+    int len2;
+    unsigned int ui;
+    void *addr;
+>>>>>>> c6659f25bbeab20a623a9d4c2a4ac4e0e1be91a4
 
 	len = _printf("Let's try to printf a simple sentence.\n");
 	len2 = printf("Let's try to printf a simple sentence.\n");
